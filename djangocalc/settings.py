@@ -54,7 +54,7 @@ ROOT_URLCONF = 'djangocalc.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'layout'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
