@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <ul> 
+            {% if user.is_authenticated %}
+                <li>Perfil</li>
+            {% else %}
+                <li>Acceder</li>
+            {% endif %}
+            <li>Inicio</li>
+            <li>Punto Fijo</li>
+            <li>Richardson</li>
+            {% if user.is_authenticated %}
+                <li>Historial</li>
+            {% endif %}
+            <li>Documentación</li>
+            <li>Repositorio</li>
+            {% if user.is_authenticated %}
+                <li>Salir</li>
+            {% endif %}
+        </ul>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
