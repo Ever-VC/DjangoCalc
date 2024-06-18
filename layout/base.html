@@ -9,20 +9,20 @@
     <nav>
         <ul> 
             {% if user.is_authenticated %}
-                <li>Perfil</li>
+                <li><a href="">Perfil</a></li>
             {% else %}
-                <li>Acceder</li>
+                <li><a href="">Acceder</a></li>
             {% endif %}
-            <li>Inicio</li>
-            <li>Punto Fijo</li>
-            <li>Richardson</li>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="">Punto</a> Fijo</li>
+            <li><a href="">Richardson</a></li>
             {% if user.is_authenticated %}
-                <li>Historial</li>
+                <li><a href="">Historial</a></li>
             {% endif %}
-            <li>Documentación</li>
-            <li>Repositorio</li>
+            <li><a href="">Documentación</a></li>
+            <li><a href="">Repositorio</a></li>
             {% if user.is_authenticated %}
-                <li>Salir</li>
+                <li><a href="">Salir</a></li>
             {% endif %}
         </ul>
     </nav>
