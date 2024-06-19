@@ -37,3 +37,7 @@ def login(request):
             return render(request, 'registration.html', {'error': 'Contraseña incorrecta.'})
         return render(request, 'registration.html', {'error': 'El usuario no existe.'})
     return render(request, 'login.html')
+
+def logout(request):
+    logout(request)
+    return redirect('index')
