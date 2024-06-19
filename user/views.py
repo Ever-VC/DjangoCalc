@@ -25,7 +25,7 @@ def signup(request):
             return render(request, 'signup.html', {'error': 'Las contraseñas no coinciden.'})
     return render(request, 'signup.html')
 
-def login(request):
+def signin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -38,6 +38,6 @@ def login(request):
         return render(request, 'registration.html', {'error': 'El usuario no existe.'})
     return render(request, 'login.html')
 
-def logout(request):
+def signout(request):
     logout(request)
     return redirect('index')
