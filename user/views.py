@@ -36,3 +36,4 @@ def login(request):
                 return redirect('index')
             return render(request, 'registration.html', {'error': 'Contraseña incorrecta.'})
         return render(request, 'registration.html', {'error': 'El usuario no existe.'})
+    return render(request, 'login.html')
