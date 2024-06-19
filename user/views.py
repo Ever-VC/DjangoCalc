@@ -6,6 +6,9 @@ from django.contrib.auth import login, authenticate, logout
 def index(request):
     return render(request, 'index.html')
 
+def documentacion(request):
+    return render(request, 'documentacion.html')
+
 def signup(request):
     if request.method == 'POST':
         username = request.POST.get('username')

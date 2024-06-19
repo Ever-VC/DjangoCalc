@@ -4,22 +4,52 @@
 
 
 {% block content %}
-<h1>Crear Cuenta</h1>
 
-<p>Ingresa la inforación solicitada</p>
-<p>{{ error }}</p>
-<form action="{% url 'signup' %}" method="POST">
-    {% csrf_token %}
-   <label for="username">Nombre de usuario:</label>
-    <input type="text" name="username" placeholder="Usuario" required>
-    <label for="email">Correo:</label>
-    <input type="email" name="email" placeholder="Correo Electrónico" required>
-    <label for="password1">Contraseña:</label>
-    <input type="password" name="password1" placeholder="Contraseña" required>
-    <label for="password2"></label>
-    <input type="password" name="password2" placeholder="Confirma tu contraseña" required>
-    <input type="submit" name="signup" value="Crear Cuenta">
-</form>
+<div class="wrapper bg-white">
+    <!-- LOGO -->
+    <img class="text-center" src="../static/imgs/1.png" alt="" style="height: 70px;">
+    <p class="text-muted pt-1">{{ error }}</p>
+    <!-- FORMULARIO -->
+    <form action="{% url 'signup' %}" method="POST">
+        {% csrf_token %}
+
+        <!-- Usuario -->
+        <div class="form-group pb-3">
+            <div class="input-field ">
+                <img class="p-2" src="../static/imgs/usuario.png" alt="" style="height: 40px;">
+                <input type="text" name="username" placeholder="Usuario" required>
+            </div>
+        </div>
+
+        <!-- Correo -->
+        <div class="form-group pb-3">
+            <div class="input-field ">
+                <img class="p-2" src="../static/imgs/email.png" alt="" style="height: 40px;">
+                <input type="email" name="email" placeholder="Correo Electrónico" required>
+            </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="form-group pb-3">
+            <div class="input-field">
+                <img class="p-2" src="../static/imgs/candado.png" alt="" style="height: 40px;">
+                <input type="password" name="password1" placeholder="Contraseña" required>
+            </div>
+        </div>
+
+        <!-- Confirmar contraseña -->
+        <div class="form-group pb-2">
+            <div class="input-field">
+                <img class="p-2" src="../static/imgs/candado.png" alt="" style="height: 40px;">
+                <input  type="password" name="password2" placeholder="Confirma tu contraseña" required>
+            </div>
+        </div>
+
+        <!-- Boton y link -->
+        <input class="btn btn-block text-center my-3" type="submit" name="signup" value="Crear Cuenta">
+        <div class="text-center pt-3 text-muted">¿Ya tienes una cuenta? <a href="{% url 'login' %}">Iniciar Sesión</a></div>
+    </form>
+</div>
 
 
 {% endblock %}
