@@ -21,3 +21,18 @@ def signup(request):
                 return render(request, 'index.html', {'message': 'Usuario creado con éxito.'})
             except:
                 return render(request, 'signup.html', {'error': 'El usuario ya existe.'})
+        else:
+            return render(request, 'signup.html', {'error': 'Las contraseñas no coinciden.'})
+    return render(request, 'signup.html')
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.check_password(password):
+                login(request, user)
+                return redirect('index')
+            return render(request, 'registration.html', {'error': 'Contraseña incorrecta.'})
+        return render(request, 'registration.html', {'error': 'El usuario no existe.'})
