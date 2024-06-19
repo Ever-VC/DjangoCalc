@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Registro{% endblock %}
+
+
+{% block content %}
+<h1>Crear Cuenta</h1>
+
+<p>Ingresa la inforación solicitada</p>
+<p>{{ error }}</p>
+<form action="{% url 'signup' %}" method="POST">
+    {% csrf_token %}
+   <label for="username">Nombre de usuario:</label>
+    <input type="text" name="username" placeholder="Usuario" required>
+    <label for="email">Correo:</label>
+    <input type="email" name="email" placeholder="Correo Electrónico" required>
+    <label for="password1">Contraseña:</label>
+    <input type="password" name="password1" placeholder="Contraseña" required>
+    <label for="password2"></label>
+    <input type="password" name="password2" placeholder="Confirma tu contraseña" required>
+    <input type="submit" name="signup" value="Crear Cuenta">
+</form>
+
+
+{% endblock %}
