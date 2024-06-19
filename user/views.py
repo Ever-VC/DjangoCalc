@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 
@@ -18,7 +18,7 @@ def signup(request):
                 user = User.objects.create_user(username, email, password)
                 user.save()
                 login(request, user)
-                return render(request, 'index.html', {'message': 'Usuario creado con éxito.'})
+                return redirect('index', {'message': 'Usuario creado con éxito.'})
             except:
                 return render(request, 'signup.html', {'error': 'El usuario ya existe.'})
         else:
@@ -34,8 +34,8 @@ def signin(request):
             if user.check_password(password):
                 login(request, user)
                 return redirect('index')
-            return render(request, 'registration.html', {'error': 'Contraseña incorrecta.'})
-        return render(request, 'registration.html', {'error': 'El usuario no existe.'})
+            return render(request, 'login.html', {'error': 'Contraseña incorrecta.'})
+        return render(request, 'login.html', {'error': 'El usuario o la contraseña son incorrectos.'})
     return render(request, 'login.html')
 
 def signout(request):
