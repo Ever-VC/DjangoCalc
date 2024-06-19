@@ -5,12 +5,63 @@
 
 
 {% block content %}
-<h1>Cover your page.</h1>
+<h1>Solucionador de problemas</h1>
 
-<p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
 <p class="lead">
-  <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white text-dark" >Learn more</a>
+  DJangoCalc proporciona herramientas para resolver ejercicios de: iteración de punto fijo y extrapolación de Richardson.
+  Este proyecto está diseñado para ser una calculadora interactiva y educativa, que permite a los usuarios ingresar funciones matemáticas y parámetros específicos para obtener soluciones a sus problemas.
 </p>
+<p class="lead">
+  <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white text-dark" >¡Comenzar!</a>
+</p>
+
+
+<template id="keyboardwrapper">
+  
+  <div class="keyboard-wrapper">
+    <input type="text" v-model="NUM" @focus="show = true" onfocus="this.blur()"/>
+    <div class="keyboard" v-if="show">
+      <div class="num d-flex">
+        <table class="table-responsive table">
+          <tr>
+            <td @click="change(7)" :class="[active === 7 ? 'active' : '']" @touchstart="msDown(7)" @touchend="msUp(7)" class="fw-bold">7</td>
+            <td @click="change(8)" :class="[active === 8 ? 'active' : '']" @touchstart="msDown(8)" @touchend="msUp(8)" class="fw-bold">8</td>
+            <td @click="change(9)" :class="[active === 9 ? 'active' : '']" @touchstart="msDown(9)" @touchend="msUp(9)" class="fw-bold">9</td>             
+            <td @click="change('/')" :class="[active === '/' ? 'active' : '']" @touchstart="msDown('/')" @touchend="msUp('/')" class="fw-bold signo">/</td>
+          </tr>
+          <tr>
+            <td @click="change(4)" :class="[active === 4 ? 'active' : '']" @touchstart="msDown(4)" @touchend="msUp(4)" class="fw-bold">4</td>
+            <td @click="change(5)" :class="[active === 5 ? 'active' : '']" @touchstart="msDown(5)" @touchend="msUp(5)" class="fw-bold">5</td>
+            <td @click="change(6)" :class="[active === 6 ? 'active' : '']" @touchstart="msDown(6)" @touchend="msUp(6)" class="fw-bold">6</td>
+            <td @click="change('*')" :class="[active === '*' ? 'active' : '']" @touchstart="msDown('*')" @touchend="msUp('*')" class="fw-bold signo">*</td>
+          </tr>
+          <tr>
+            <td @click="change(1)" :class="[active === 1 ? 'active' : '']" @touchstart="msDown(1)" @touchend="msUp(1)" class="fw-bold">1</td>
+            <td @click="change(2)" :class="[active === 2 ? 'active' : '']" @touchstart="msDown(2)" @touchend="msUp(2)" class="fw-bold">2</td>
+            <td @click="change(3)" :class="[active === 3 ? 'active' : '']" @touchstart="msDown(3)" @touchend="msUp(3)" class="fw-bold">3</td>
+            <td @click="change('-')" :class="[active === '-' ? 'active' : '']" @touchstart="msDown('-')" @touchend="msUp('-')" class="fw-bold signo">-</td>
+          </tr>
+          <tr>
+            <td colspan="2" @click="change(0)" :class="[active === 0 ? 'active' : '']" @touchstart="msDown(0)" @touchend="msUp(0)" class="fw-bold" >0</td>
+            <td colspan="1" @click="change('.')" :class="[active === '.' ? 'active' : '']" @touchstart="msDown('.')" @touchend="msUp('.')" class="fw-bold">.</td>
+            <td @click="change('+')" :class="[active === '+' ? 'active' : '']" @touchstart="msDown('+')" @touchend="msUp('+')" class="fw-bold signo">+</td>
+          </tr>
+          <tr>
+            <td colspan="2" class="comfirm fw-bold" @click="comfirm">Ir</td>
+            <td colspan="2" class="del" @click="del">
+              <img src='../static/imgs/borrar.png'  />
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</template>  
+<div id="app">
+  <keyboardwrapper></keyboardwrapper>
+</div>
+
+
 {% endblock %}
 
 

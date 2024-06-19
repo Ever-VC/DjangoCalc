@@ -1,8 +1,4 @@
-/*
- * Globals
- */
-
-
+/* CSS DE LA BASE */
  .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
@@ -17,18 +13,12 @@
     }
   }
 
-/* Custom default button */
 .btn-secondary,
 .btn-secondary:hover,
 .btn-secondary:focus {
   color: #333;
-  text-shadow: none; /* Prevent inheritance from `body` */
+  text-shadow: none; 
 }
-
-
-/*
- * Base structure
- */
 
 body {
   text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
@@ -36,14 +26,11 @@ body {
 }
 
 .cover-container {
-  max-width: 42em;
+  max-width: 52em;
 }
 
 
-/*
- * Header
- */
-
+/* CSS DEl HEADER */
 .nav-masthead .nav-link {
   font-weight: 700;
   color: rgba(255, 255, 255, .5);
@@ -64,14 +51,17 @@ body {
   border-bottom-color: #fff;
 }
 
+/* CSS DE LOS TOOLTIPS */
 .custom-tooltip {
   --bs-tooltip-bg: var(--bs-info);
   --bs-tooltip-color: var(--bs-white);
 }
 
 
+/* CSS DEl TECLADO */
 .keyboard-wrapper {
     user-select: none;
+    
     input {
       width:100%;
       height:50px;
@@ -81,29 +71,26 @@ body {
       bottom: 0;
       width: 100%;
       .num {
+        width: 100%;
         table {
           width: 100%;
           border: 1px solid #ccc;
           border-collapse: collapse;
           background: #fff;
           td {
-            height: 50px;
+            height: 35px;
             vertical-align: middle;
-            color: #333;
             font-size: 20px;
-            border: 1px solid #ccc;
+            border: 1px solid #0dcaf0;
             text-align: center;
           }
-          td.active{
-            background:#ccc;
-          }
-          .del {
-            background: #eee;
+          .signo{
+            color: #0dcaf0;
           }
           .comfirm {
-            font-size: 16px;
-            width: 80px;
-            background: #118eeb;
+            font-size: 18px;
+            width: 70px;
+            background: #0dcaf0;
             color: #fff;
           }
         }
