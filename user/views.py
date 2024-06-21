@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
 
 # Create your views here.
 def index(request):
@@ -53,3 +55,31 @@ def signin(request):
 def signout(request):
     logout(request)
     return redirect('index')
+
+@login_required
+def profile(request):
+    user = request.user
+    return render(request, 'profile.html', {'user': user})
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        # Almacenar los datos del formulario
+        username = request.POST.get('username')
+        old_password = request.POST.get('password')
+        password = request.POST.get('password1')
+        confirm_password = request.POST.get('password2')
+        user = request.user # Obtener el usuario actual
+        if user.check_password(old_password): # Verificar la contraseña actual
+            if password == confirm_password: # Verificar que las nuevas contraseñas coincidan
+                user.username = username # Cambiar el nombre de usuario
+                user.set_password(password) # Cambiar la contraseña
+                user.save() # Guardar los cambios
+                # Actualizar la sesión
+                update_session_auth_hash(request, user)
+
+                # Redirigir al perfil
+                return redirect('profile')
+            return render(request, 'edit_profile.html', {'error': 'Las contraseñas no coinciden.'})
+        return render(request, 'edit_profile.html', {'error': 'Contraseña incorrecta.'})
+    return render(request, 'edit_profile.html')
