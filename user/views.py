@@ -29,13 +29,22 @@ def signup(request):
     return render(request, 'signup.html')
 
 def signin(request):
+    if request.user.is_authenticated:
+        return redirect('index')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        remember_me = request.POST.get('radio', False)
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.check_password(password):
                 login(request, user)
+                if remember_me:
+                    print('Remember me')
+                    request.session.set_expiry(1209600) # Almacena la sesión por 2 semanas
+                else:
+                    print('Forget me')
+                    request.session.set_expiry(0) # Almacena la sesión hasta que el navegador se cierre
                 return redirect('index')
             return render(request, 'login.html', {'error': 'Contraseña incorrecta.'})
         return render(request, 'login.html', {'error': 'El usuario o la contraseña son incorrectos.'})
