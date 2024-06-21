@@ -204,3 +204,11 @@ a:hover {
     background-color: #54c4da
 }
 
+/* QUITA LOS ESTILOS DEL INPUT DE IR EN LA CALCULADORA BASICA */
+.btn-calc-basic {
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}	
