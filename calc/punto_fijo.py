@@ -31,10 +31,7 @@ def solve_punto_fijo(gx, x_previo, error_objetivo, max_iter, decimals):
         # Calcula el valor de x en la iteración actual
         xi = round(gx.evalf(subs={x: x_previo}), decimals)
         # Calcula el error absoluto
-        error = round((abs(xi - x_previo) / xi) * 100, decimals)
-        # Si da un resultado negativo, se toma el valor absoluto
-        if error < 0:
-            error = abs(error)
+        error = round(abs((xi - x_previo) / xi) * 100, decimals)
 
         # Almacena los resultados en el DataFrame
         df.loc[len(df)] = [iteraciones, xi, error]
