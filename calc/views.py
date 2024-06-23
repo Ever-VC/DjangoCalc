@@ -11,6 +11,7 @@ import sympy as sp
 from sympy.core import Mul, Pow
 import pandas as pd
 import re # Regular expressions
+from .extrapolacion_richardson import solve_extrapolacion_richardson, graficar_extrapolacion_richardson
 
 # Create your views here.
 def index(request):
@@ -90,7 +91,6 @@ def punto_fijo(request):
         gx_derivada = sp.diff(sp.sympify(gx), x) # Calcula la derivada de la función g(x)
         result_convergence = round(gx_derivada.evalf(subs={x: x0}), int(decimals)) # Evalúa la función derivada g'(x) en el punto x0
         gx_derivada_latex = sp.latex(gx_derivada)
-        print(result_convergence)
         
         # Verifica la convergencia solo si verify_convergence está marcado
         #if verify_convergence and not validar_gx(gx, float(x0)):
@@ -133,3 +133,38 @@ def punto_fijo(request):
     else: # Si el método es GET, retorna el template
         return render(request, 'punto_fijo.html')
 
+
+def extrapolacion_richardson(request):
+    if request.method == 'POST':
+        fx = request.POST.get('fx')
+        x0 = float(request.POST.get('x0'))
+        h = float(request.POST.get('h'))
+        order = int(request.POST.get('order'))
+        
+        try:
+            expr = validate_func(fx)
+            
+            f = sp.lambdify(sp.symbols('x'), expr, 'numpy')
+            
+            result, df_x_h_vals, df_extaplo_rich = solve_extrapolacion_richardson(f, x0, h, expr, order)
+            graph = graficar_extrapolacion_richardson(f, x0, h, order, expr)
+
+            df_x_h_vals = df_x_h_vals.to_dict('records')
+            df_extaplo_rich = df_extaplo_rich.to_dict('records')
+            
+            graph_base64 = base64.b64encode(graph.getvalue()).decode('utf-8')
+
+            fx = sp.latex(expr)
+            context = {
+                'result': result,
+                'graph': graph_base64,
+                'fx': fx,
+                'df_x_h_vals': df_x_h_vals,
+                'df_extaplo_rich': df_extaplo_rich,
+                'order': order,
+            }
+            return render(request, 'extrapolacion_richardson.html', context)
+        except ValueError as e:
+            return render(request, 'extrapolacion_richardson.html', {'message': str(e)})
+    else:
+        return render(request, 'extrapolacion_richardson.html')

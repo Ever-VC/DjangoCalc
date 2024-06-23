@@ -33,4 +33,3 @@ def validate_func(func):
         raise ValueError(f"Error al procesar la expresión: {e}")
 
     return expr
-
