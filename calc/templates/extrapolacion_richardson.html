@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Extrapolación{% endblock %}
+
+{% block content %}
+<h1>Diferenciación por el método de Extrapolación de Richardson</h1>
+{% if message %}
+    <p>{{ message }}</p>
+{% endif %}
+
+<section>
+    <form action="{% url 'extrapolacion_richardson' %}" class="extapolacion_richardson" method="POST">
+        {% csrf_token %}
+        <label for="fx">
+            Función f(x):
+            <input type="text" name="fx" id="fx" required>
+        </label>
+
+        <label for="x0">
+            Valor Inicial de X:
+            <input type="text" name="x0" id="x0" step="any" required>
+        </label>
+
+        <label for="h">
+            h:
+            <input type="number" name="h" id="h" step="any" required>
+        </label>
+
+        <label for="order">
+            Orden:
+            <input type="number" name="order" id="order" step="any" required>
+        </label>
+        <input type="submit" value="Calcular">
+    </form>
+</section>
+
+{% if result %}
+<br><br>
+<section class="results">
+    <h3>Gráficas:</h3>
+    <img src="data:image/png;base64,{{ graph }}" alt="Gráfica de la derivada">
+    <br>
+    <hr>
+    <h3>El resultado es: {{result}}</h3>
+    <hr>
+    {% if order == 1 %}
+        <h4>Para el cálculo de primera derivada se utiliza: </h4>
+        <p>$$ D(h_{i}) = f'(x_i) \approx \frac{-f(x_{i+2}) + 8f(x_{i+1}) - 8f(x_{i-1}) + f(x_{i-2})}{12h}$$</p>
+    {% elif order == 2 %}
+        <h4>Para el cálculo de segunda derivada se utiliza: </h4>
+        <p>$$ D(h_{i}) = f''(x_i) \approx \frac{-f(x_{i+2}) + 16f(x_{i+1}) - 30f(x_i) + 16f(x_{i-1}) - f(x_{i-2})}{12h^2}$$</p>
+    {% elif order == 3 %}
+        <h4>Para el cálculo de tercera derivada se utiliza: </h4>
+        <p>$$ D(h_{i}) = f'''(x_i) \approx \frac{-f(x_{i+3}) + 8f(x_{i+2}) - 13f(x_{i+1}) + 13f(x_{i-1}) - 8f(x_{i-2}) + f(x_{i-3})}{8h^3}$$</p>
+    {% elif order == 4 %}
+        <h4>Para el cálculo de cuarta derivada se utiliza: </h4>
+        <p>$$ D(h_{i}) = f''''(x_i) \approx \frac{f(x_{i+2}) - 4f(x_{i+1}) + 6f(x_i) - 4f(x_{i-1}) + f(x_{i-2})}{h^4}$$</p>
+    {% endif %}
+    <p>La Función es:</p>
+    <p>$$ f(x) = {{ fx}} $$</p>
+    {% if user.is_authenticated %}
+        {% for row in df_x_h_vals %}
+            {% if order == 1 %}
+                <hr>
+                <p>$$ D(h_{ {{ forloop.counter }} }) = f'( {{ row.Xval }} ) \approx \frac{-f({{ row.Xval }} + 2 * {{ row.Hval }} ) + 8f({{ row.Xval }} + {{ row.Hval }}) - 8f({{ row.Xval }} - {{ row.Hval }}) + f({{ row.Xval }} - 2 * {{ row.Hval }})}{12({{ row.Hval }})}$$</p>
+                <p>Primero calculamos los resultados de las evaluaciones de la función:</p>
+                <p>$$ f({{ row.Xval }} + 2 * {{ row.Hval }} ) = {{ row.fxip2 }}$$</p>
+                <p>$$ f({{ row.Xval }} + {{ row.Hval }}) = {{ row.fxip1 }}$$</p>
+                <p>$$ f({{ row.Xval }} - {{ row.Hval }}) = {{ row.fxim1 }}$$</p>
+                <p>$$ f({{ row.Xval }} - 2 * {{ row.Hval }}) = {{ row.fxim2 }}$$</p>
+                <p>$$ D(h_{ {{ forloop.counter }} }) = f'( {{ row.Xval }} ) \approx \frac{-({{ row.fxip2 }} ) + 8({{ row.fxip1 }}) - 8({{ row.fxim1 }}) + ({{ row.fxim2 }})}{12({{ row.Hval }})} = {{ row.dr }}$$</p>
+            {% elif order == 2 %}
+            {% elif order == 3 %}
+            {% elif order == 4 %}
+            {% endif %}
+        {% endfor %}
+        {% for row in df_extaplo_rich %}
+            <p>Calculamos el error:</p>
+            <p>\( \varepsilon_a = \left| \frac{X_{i+1} - X_i}{X_{i+1}} \right| 100\% \)</p>
+            <p>Sustituyendo nos queda:</p>
+            <p>\( \varepsilon_a = \left| \frac{ {{ row.D1 }} - ({{ row.D2 }}) }{ {{ row.D1 }} } \right| 100\% = {{ row.error }}\% \)</p>
+            <p>Para calcular el valor de la extrapolación utilizamos:</p>
+            <p>$$D \approx \frac{4}{3}D(h_2) - \frac{1}{3}D(h_1)$$</p>
+            <p>Sustituyendo los valores obtenemos lo siguiente:</p>
+            <p>$$D \approx \frac{4}{3}({{ row.D2 }}) - \frac{1}{3}({{ row.D1 }}) = {{ result }}$$</p>
+        {% endfor %}
+    {% else %}
+        {% for row in df_extaplo_rich %}
+            {% if order == 1 %}
+                <hr>
+                <p>$$ D(h_1) = {{ row.D1 }}$$</p>
+                <p>$$ D(h_2) = {{ row.D2 }}$$</p>
+                {% elif order == 2 %}
+            {% elif order == 3 %}
+            {% elif order == 4 %}
+            {% endif %}
+            <p>Calculamos el error:</p>
+            <p>\( \varepsilon_a = \left| \frac{X_{i+1} - X_i}{X_{i+1}} \right| 100\% \)</p>
+            <p>Sustituyendo nos queda:</p>
+            <p>\( \varepsilon_a = \left| \frac{ {{ row.D1 }} - ({{ row.D2 }}) }{ {{ row.D1 }} } \right| 100\% = {{ row.error }}\% \)</p>
+            <p>Para calcular el valor de la extrapolación utilizamos:</p>
+            <p>$$D \approx \frac{4}{3}D(h_2) - \frac{1}{3}D(h_1)$$</p>
+            <p>Sustituyendo los valores obtenemos lo siguiente:</p>
+            <p>$$D \approx \frac{4}{3}({{ row.D2 }}) - \frac{1}{3}({{ row.D1 }}) = {{ result }}$$</p>
+        {% endfor %}
+        <p>Para ver los valores de la tabla, por favor <a href="{% url 'login' %}">inicia sesión</a></p>
+    {% endif %}
+
+    
+</section>
+{% else %}
+<p>NO HAY RESULTADO</p>
+{% endif %}
+{% endblock %}
