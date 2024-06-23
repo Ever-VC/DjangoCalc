@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Historial{% endblock %}
+
+{% block content %}
+<h1>Historial de Cálculos</h1>
+{% if history %}
+    {% for item in history %}
+        {% if item.method == 'punto_fijo' %}
+            <div class="item" style="border: solid red 2px;">
+                <p>f(x): $$ {{ item.fx }} $$</p>
+                <p>g(x): $$ {{ item.gx }} $$</p>
+                <p>x0: {{ item.x0 }} </p>
+                <p>Error Objetivo: {{ item.error }} </p>
+                <p>Decimales: {{ item.decimals }} </p>
+                <p>Última vez: {{ item.created_at }} </p>
+                <form action="{% url 'punto_fijo' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="fx" value="{{ item.fx }}" hidden>
+                    <input type="hidden" name="gx" value="{{ item.gx }}" hidden>
+                    <input type="checkbox" name="verify_convergence" id="verify_convergence" {{ item.verify_convergence }} hidden>
+                    <input type="hidden" name="x0" value="{{ item.x0 }}" hidden>
+                    <input type="hidden" name="error" value="{{ item.error }}" hidden>
+                    <input type="hidden" name="max_iter" value="{{ item.max_iter }}" hidden>
+                    <input type="hidden" name="decimals" value="{{ item.decimals }}" hidden>
+                    <input type="submit" value="Ver">
+                </form>
+                <form action="{% url 'exercise_delete' item.id %}">
+                    <input type="submit" value="Eliminar">
+                </form>
+            </div>
+        {% else %}
+            <div class="item" style="border: solid red 2px;">
+                <p>f(x): $$ {{ item.fx }} $$</p>
+                <p>x0: {{ item.x0 }} </p>
+                <p>h:  {{ item.h }} </p>
+                <p>Orden: $$ {{ item.order }} $$</p>
+                <p>Última vez: {{ item.created_at }} </p>
+                <form action="{% url 'extrapolacion_richardson' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="fx" value="{{ item.fx }}" hidden>
+                    <input type="hidden" name="x0" value="{{ item.x0 }}" hidden>
+                    <input type="hidden" name="h" value="{{ item.h }}" hidden>
+                    <input type="hidden" name="order" value="{{ item.order }}" hidden>
+                    <input type="submit" value="Ver">
+                </form>
+                <form action="{% url 'exercise_delete' item.id %}">
+                    <input type="submit" value="Eliminar">
+                </form>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p>No hay cálculos previos</p>
+{% endif %}
+{% endblock %}

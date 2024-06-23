@@ -2,7 +2,7 @@ import matplotlib
 matplotlib.use('Agg')  # Usar el backend 'Agg' para evitar problemas con el hilo principal
 
 import matplotlib.pyplot as plt
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .punto_fijo import *
 from .validate_func import validate_func
 import base64
@@ -12,11 +12,12 @@ from sympy.core import Mul, Pow
 import pandas as pd
 import re # Regular expressions
 from .extrapolacion_richardson import solve_extrapolacion_richardson, graficar_extrapolacion_richardson
+from .models import Calculator_History
+
 
 # Create your views here.
 def index(request):
     if request.method == 'POST':
-        print(request.POST)
         basic_operation = request.POST.get('basic_operation')
 
         # Valida de que la operación solo contiene números y operadores básicos
@@ -38,7 +39,6 @@ def index(request):
 
 def basic_calc(request):
     if request.method == 'POST':
-        print(request.POST)
         basic_operation = request.POST.get('basic_operation')
 
         # Valida de que la operación solo contiene números y operadores básicos
@@ -59,6 +59,25 @@ def basic_calc(request):
     else:
         return redirect('/')
 
+def history(request):
+    # Obtiene el historial de cálculos del usuario autenticado y lo ordena por fecha de creación
+    history = Calculator_History.objects.filter(user=request.user).order_by('-created_at') # Obtiene el historial de cálculos del usuario autenticado
+    # Si no hay historial, retorna el template sin datos
+    if not history:
+        return render(request, 'history.html')
+
+    # Recorre el historial y modifica el campo created_at para mostrar 'Hace cuánto tiempo se creó'
+    # Formatea la fecha y hora para cada objeto
+    for item in history:
+        if item.verify_convergence == True:
+            item.verify_convergence = 'checked'
+    return render(request, 'history.html', {'history': history})
+
+def exercise_delete(request, exercise_id):
+    # Obtiene el ejercicio a eliminar
+    exercise = Calculator_History.objects.get(id=exercise_id)
+    exercise.delete() # Elimina el ejercicio
+    return redirect('history') # Redirige al historial de cálculos
 
 def punto_fijo(request):
     if request.method == 'POST':
@@ -70,6 +89,26 @@ def punto_fijo(request):
         max_iter = request.POST['max_iter']
         decimals = request.POST['decimals']
         verify_convergence = request.POST.get('verify_convergence', False) # Verifica si verify_convergence está marcado
+
+        if verify_convergence == 'on': # Si está marcado, entonces es True
+            verify_convergence = True
+
+        # Valida que los campos no estén vacíos
+        if not fx or not x0 or not error_objetivo or not max_iter or not decimals:
+            return render(request, 'punto_fijo.html', {
+                'error': 'Todos los campos son obligatorios.'
+            })
+        
+        # Elimina las , de los números decimales
+        error_objetivo = error_objetivo.replace(',', '.')
+        x0 = x0.replace(',', '.')
+
+        # Valida que los campos numéricos sean válidos
+        if not error_objetivo.replace('.', '', 1).isdigit() or not max_iter.isdigit() or not decimals.isdigit():
+            return render(request, 'punto_fijo.html', {
+                'error': 'Los campos error, iteraciones y decimales deben ser números.'
+            })
+
 
         # Valida que la función f(x) y g(x) sean válidas
         try:
@@ -119,6 +158,21 @@ def punto_fijo(request):
             
             df[-1]['next_X'] = None # La última iteración no tiene siguiente valor
 
+            # Guarda el historial de cálculos en la base de datos
+            history = Calculator_History(
+                method='punto_fijo',
+                fx=fx,
+                gx=gx,
+                verify_convergence=verify_convergence,
+                x0=x0,
+                error=error_objetivo,
+                max_iter=max_iter,
+                decimals=decimals,
+                user=request.user
+            )
+
+            history.save() # Guarda el historial de cálculos en la base de datos
+
             # Retorna el template con los resultados
             return render(request, 'punto_fijo.html', {
                 'df': df,
@@ -137,9 +191,22 @@ def punto_fijo(request):
 def extrapolacion_richardson(request):
     if request.method == 'POST':
         fx = request.POST.get('fx')
-        x0 = float(request.POST.get('x0'))
-        h = float(request.POST.get('h'))
+        x0 = request.POST.get('x0')
+        h = request.POST.get('h')
         order = int(request.POST.get('order'))
+
+        # Valida que los campos no estén vacíos
+        if not fx or not x0 or not h or not order:
+            return render(request, 'extrapolacion_richardson.html', {
+                'error': 'Todos los campos son obligatorios.'
+            })
+        
+        # Elimina las , de los números decimales
+        h = h.replace(',', '.')
+        x0 = x0.replace(',', '.')
+        
+        h = float(h)
+        x0 = float(x0)
         
         try:
             expr = validate_func(fx)
@@ -154,11 +221,22 @@ def extrapolacion_richardson(request):
             
             graph_base64 = base64.b64encode(graph.getvalue()).decode('utf-8')
 
-            fx = sp.latex(expr)
+            # Guarda el historial de cálculos en la base de datos
+            history = Calculator_History(
+                method='extrapolacion_richardson',
+                fx=fx,
+                x0=x0,
+                h=h,
+                order=order,
+                user=request.user
+            )
+
+            history.save() # Guarda el historial de cálculos en la base de datos
+
             context = {
                 'result': result,
                 'graph': graph_base64,
-                'fx': fx,
+                'fx': sp.latex(expr),
                 'df_x_h_vals': df_x_h_vals,
                 'df_extaplo_rich': df_extaplo_rich,
                 'order': order,
