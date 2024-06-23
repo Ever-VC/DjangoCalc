@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Registro{% endblock %}
 
@@ -7,7 +8,7 @@
 
 <div class="wrapper bg-white">
     <!-- LOGO -->
-    <img class="text-center" src="../static/imgs/1.png" alt="" style="height: 70px;">
+    <img class="text-center" src="{% static 'imgs/1.png' %}" alt="" style="height: 70px;">
     <p class="text-muted pt-1">{{ error }}</p>
     <!-- FORMULARIO -->
     <form action="{% url 'signup' %}" method="POST">
@@ -16,7 +17,7 @@
         <!-- Usuario -->
         <div class="form-group pb-3">
             <div class="input-field ">
-                <img class="p-2" src="../static/imgs/usuario.png" alt="" style="height: 40px;">
+                <img class="p-2" src="{% static 'imgs/usuario.png' %}" alt="" style="height: 40px;">
                 <input type="text" name="username" placeholder="Usuario" required>
             </div>
         </div>
@@ -24,7 +25,7 @@
         <!-- Correo -->
         <div class="form-group pb-3">
             <div class="input-field ">
-                <img class="p-2" src="../static/imgs/email.png" alt="" style="height: 40px;">
+                <img class="p-2" src="{% static 'imgs/email.png' %}" alt="" style="height: 40px;">
                 <input type="email" name="email" placeholder="Correo Electrónico" required>
             </div>
         </div>
@@ -32,7 +33,7 @@
         <!-- Contraseña -->
         <div class="form-group pb-3">
             <div class="input-field">
-                <img class="p-2" src="../static/imgs/candado.png" alt="" style="height: 40px;">
+                <img class="p-2" src="{% static 'imgs/candado.png' %}" alt="" style="height: 40px;">
                 <input type="password" name="password1" placeholder="Contraseña" required>
             </div>
         </div>
@@ -40,7 +41,7 @@
         <!-- Confirmar contraseña -->
         <div class="form-group pb-2">
             <div class="input-field">
-                <img class="p-2" src="../static/imgs/candado.png" alt="" style="height: 40px;">
+                <img class="p-2" src="{% static 'imgs/candado.png' %}" alt="" style="height: 40px;">
                 <input  type="password" name="password2" placeholder="Confirma tu contraseña" required>
             </div>
         </div>

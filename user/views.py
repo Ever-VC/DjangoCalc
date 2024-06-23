@@ -11,6 +11,9 @@ def index(request):
 def documentacion(request):
     return render(request, 'documentacion.html')
 
+def calcular(request):
+    return render(request, 'calcular.html')
+
 def signup(request):
     if request.method == 'POST':
         username = request.POST.get('username')

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Inicio{% endblock %}
 
@@ -11,7 +12,7 @@
   Este proyecto está diseñado para ser una calculadora interactiva y educativa, que permite a los usuarios ingresar funciones matemáticas y parámetros específicos para obtener soluciones a sus problemas.
 </p>
 <p class="lead">
-  <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white text-dark" >¡Comenzar!</a>
+  <a href="{% url 'calcular' %}" class="btn btn-lg btn-secondary fw-bold border-white bg-white text-dark" >¡Comenzar!</a>
 </p>
 {% if error %}
 <p>{{error}}</p>
@@ -55,7 +56,7 @@
             <tr>
               <td colspan="2" class="comfirm fw-bold" @click="comfirm"><input class="btn-calc-basic" type="submit" value="Ir"></td>
               <td colspan="2" class="del" @click="del">
-                <img src='../static/imgs/borrar.png'  />
+                <img src="{% static 'imgs/borrar.png' %}"/>
               </td>
             </tr>
           </table>
