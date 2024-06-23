@@ -4,12 +4,76 @@
 {% block title %}Perfil{% endblock %}
 
 {% block content %}
-<h1>Perfil de Usuario</h1>
-<p>Nombre: {{ user.username }}</p>
-<p>Correo: {{ user.email }}</p>
-<p>Fecha de creación: {{ user.date_joined }}</p>
-<p>Último acceso: {{ user.last_login }}</p>
-<p>Id: {{ user.id }}</p>
-<a href="{% url 'edit_profile' %}"><input type="submit" value="Editar"></a>
+
+<section>
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img src="{% static 'imgs/perfil.png' %}" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 120px;">
+              <h5 class="my-3">{{ user.username }}</h5>
+              <p class="text-muted mb-1">Miembro VIP</p>
+              <p class="text-muted mb-4">San Miguel, El Salvador</p>
+              <div class="d-flex justify-content-center mb-2">
+                <a href="{% url 'edit_profile' %}"  class="btn btn-block "><input  class="bg-block" type="submit" value="Editar"></a>
+                <a href="{% url 'logout' %}" class="btn btn-block-outline  ms-1"><input class="bg-block-outline" type="submit" value="Salir"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="card mb-4 pt-4 pb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Nombre</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{ user.username }}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">ID</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{ user.id }}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Correo</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{ user.email }}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Creación</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{ user.date_joined }}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Ultimo acceso</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{ user.last_login }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</section>
+
 
 {% endblock %}

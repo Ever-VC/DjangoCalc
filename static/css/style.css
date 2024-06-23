@@ -200,6 +200,23 @@ a:hover {
     color: #fff
 }
 
+.btn.btn-block-outline {
+  border-radius: 20px;
+  background-color: #fff;
+  color: #0dcaf0;
+  border: 1px solid #0dcaf0;
+}
+
+.bg-block {
+  background-color: #0dcaf0;
+  color: #fff
+}
+
+.bg-block-outline {
+  background-color: #fff;
+  color: #0dcaf0;
+}
+
 .btn.btn-block:hover {
     background-color: #54c4da
 }
