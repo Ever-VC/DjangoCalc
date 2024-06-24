@@ -11,8 +11,33 @@
     <img class="text-center" src="{% static 'imgs/1.png' %}" alt="" style="height: 70px;">
     <p class="text-muted pt-1">{{ error }}</p>
     <!-- FORMULARIO -->
-    <form action="{% url 'signup' %}" method="POST">
+    <form action="{% url 'signup' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
+
+        
+        <!-- Imagen -->
+        <div class="form-group pb-3">
+            <div class="input-field ">
+                <img class="p-2" src="../static/imgs/usuario.png" alt="" style="height: 40px;">
+                <input accept="image/png,image/jpeg" type="file" name="profile_img" required>
+            </div>
+        </div>
+
+        <!-- Nombre -->
+        <div class="form-group pb-3">
+            <div class="input-field ">
+                <img class="p-2" src="../static/imgs/usuario.png" alt="" style="height: 40px;">
+                <input type="text" name="first_name" placeholder="Nombre" required>
+            </div>
+        </div>
+
+        <!-- Apellido -->
+        <div class="form-group pb-3">
+            <div class="input-field ">
+                <img class="p-2" src="../static/imgs/usuario.png" alt="" style="height: 40px;">
+                <input type="text" name="last_name" placeholder="Apellido" required>
+            </div>
+        </div>
 
         <!-- Usuario -->
         <div class="form-group pb-3">

@@ -10,14 +10,38 @@
     <h2  class="pt-2 text-dark ">Actualizar información</h2>
     <p class="text-muted pt-1">{{ error }}</p>
     <!-- FORMULARIO -->
-    <form action="{% url 'edit_profile' %}" method="POST">
+    <form action="{% url 'edit_profile' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
+        
+        <!-- Imagen -->
+        <div class="form-group pb-3">
+            <div class="input-field ">
+                <img class="p-2" src="../static/imgs/usuario.png" alt="" style="height: 40px;">
+                <input accept="image/png,image/jpeg" type="file" name="profile_img">
+            </div>
+        </div>
+
+        <!-- Nombre -->
+        <div class="form-group pb-3">
+            <div class="input-field ">
+                <img class="p-2" src="../static/imgs/usuario.png" alt="" style="height: 40px;">
+                <input type="text" name="first_name" placeholder="Nombre" value="{{ user.first_name }}">
+            </div>
+        </div>
+
+        <!-- Apellido -->
+        <div class="form-group pb-3">
+            <div class="input-field ">
+                <img class="p-2" src="../static/imgs/usuario.png" alt="" style="height: 40px;">
+                <input type="text" name="last_name" placeholder="Apellido" value="{{ user.last_name }}">
+            </div>
+        </div>
 
         <!-- Usuario -->
         <div class="form-group pb-3">
             <div class="input-field ">
                 <img class="p-2" src="{% static 'imgs/usuario.png' %}" alt="" style="height: 40px;">
-                <input type="text" name="username" placeholder="Usuario" required>
+                <input type="text" name="username" placeholder="Usuario">
             </div>
         </div>
 
@@ -25,14 +49,14 @@
         <div class="form-group pb-3">
             <div class="input-field">
                 <img class="p-2" src="{% static 'imgs/candado.png' %}" alt="" style="height: 40px;">
-                <input type="password" name="password" placeholder="Antigua contraseña" required>
+                <input type="password" name="password" placeholder="Antigua contraseña">
             </div>
         </div>
 
         <div class="form-group pb-3">
             <div class="input-field">
                 <img class="p-2" src="{% static 'imgs/candado.png' %}" alt="" style="height: 40px;">
-                <input type="password" name="password1" placeholder="Nueva contraseña" required>
+                <input type="password" name="password1" placeholder="Nueva contraseña">
             </div>
         </div>
 
@@ -40,7 +64,7 @@
         <div class="form-group pb-2">
             <div class="input-field">
                 <img class="p-2" src="{% static 'imgs/candado.png' %}" alt="" style="height: 40px;">
-                <input  type="password" name="password2" placeholder="Confirma tu nueva contraseña" required>
+                <input  type="password" name="password2" placeholder="Confirma tu nueva contraseña">
             </div>
         </div>
 
