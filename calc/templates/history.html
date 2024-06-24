@@ -1,55 +1,79 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Historial{% endblock %}
 
 {% block content %}
 <h1>Historial de Cálculos</h1>
 {% if history %}
+<div class="row m-0 p-0">
     {% for item in history %}
         {% if item.method == 'punto_fijo' %}
-            <div class="item" style="border: solid red 2px;">
-                <p>f(x): $$ {{ item.fx }} $$</p>
-                <p>g(x): $$ {{ item.gx }} $$</p>
-                <p>x0: {{ item.x0 }} </p>
-                <p>Error Objetivo: {{ item.error }} </p>
-                <p>Decimales: {{ item.decimals }} </p>
-                <p>Última vez: {{ item.created_at }} </p>
-                <form action="{% url 'punto_fijo' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="fx" value="{{ item.fx }}" hidden>
-                    <input type="hidden" name="gx" value="{{ item.gx }}" hidden>
-                    <input type="checkbox" name="verify_convergence" id="verify_convergence" {{ item.verify_convergence }} hidden>
-                    <input type="hidden" name="x0" value="{{ item.x0 }}" hidden>
-                    <input type="hidden" name="error" value="{{ item.error }}" hidden>
-                    <input type="hidden" name="max_iter" value="{{ item.max_iter }}" hidden>
-                    <input type="hidden" name="decimals" value="{{ item.decimals }}" hidden>
-                    <input type="submit" value="Ver">
-                </form>
-                <form action="{% url 'exercise_delete' item.id %}">
-                    <input type="submit" value="Eliminar">
-                </form>
-            </div>
+        <div class="col-4 p-1">          
+            <div class="item card border-info mb-2">
+                <div class="card-header bg-info text-white fw-bold">
+                    Iteración de Punto Fijo
+                </div>
+                <h6 class="ps-4 pt-2 btn-calcu">Datos:</h6>  
+                <p class="ps-4 text-start fw-bold fst-italic">F(x):</p>
+                <p>$${{ item.fx }}$$</p>
+                <p class="ps-4 text-start fw-bold fst-italic">G(x): {{ item.gx }} </p>
+                <p class="ps-4 text-start fw-bold fst-italic">Xo: {{ item.x0 }} </p>
+                <p class="ps-4 text-start fw-bold fst-italic">Error Objetivo: {{ item.error }} </p>
+                <p class="ps-4 text-start fw-bold fst-italic">Última vez: {{ item.created_at }} </p>
+
+                <div class="d-flex justify-content-center mb-2">
+                    <form action="{% url 'punto_fijo' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="fx" value="{{ item.fx }}" hidden>
+                        <input type="hidden" name="gx" value="{{ item.gx }}" hidden>
+                        <input type="checkbox" name="verify_convergence" id="verify_convergence" {{ item.verify_convergence }} hidden>
+                        <input type="hidden" name="x0" value="{{ item.x0 }}" hidden>
+                        <input type="hidden" name="error" value="{{ item.error }}" hidden>
+                        <input type="hidden" name="max_iter" value="{{ item.max_iter }}" hidden>
+                        <input type="hidden" name="decimals" value="{{ item.decimals }}" hidden>
+                        <input class="btn btn-block " type="submit" value="Ver">
+                    </form>
+                    <form action="{% url 'exercise_delete' item.id %}">
+                        <input class="btn btn-block-outline  ms-1" type="submit" value="Eliminar">
+                    </form>
+                  </div>
+              </div>
+          </div>
+
         {% else %}
-            <div class="item" style="border: solid red 2px;">
-                <p>f(x): $$ {{ item.fx }} $$</p>
-                <p>x0: {{ item.x0 }} </p>
-                <p>h:  {{ item.h }} </p>
-                <p>Orden: $$ {{ item.order }} $$</p>
-                <p>Última vez: {{ item.created_at }} </p>
-                <form action="{% url 'extrapolacion_richardson' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="fx" value="{{ item.fx }}" hidden>
-                    <input type="hidden" name="x0" value="{{ item.x0 }}" hidden>
-                    <input type="hidden" name="h" value="{{ item.h }}" hidden>
-                    <input type="hidden" name="order" value="{{ item.order }}" hidden>
-                    <input type="submit" value="Ver">
-                </form>
-                <form action="{% url 'exercise_delete' item.id %}">
-                    <input type="submit" value="Eliminar">
-                </form>
-            </div>
+        <div class="col-4 p-1">          
+            <div class="item card border-info mb-2">
+                <div class="card-header bg-info text-white fw-bold">
+                    Método de Extrapolación de Richardson
+                </div>
+                <h6 class="ps-4 pt-2 btn-calcu">Datos:</h6>    
+                <p class="ps-4 text-start fw-bold fst-italic">F(x):</p>
+                <p>$${{ item.fx }}$$</p>
+                <p class="ps-4 text-start fw-bold fst-italic">X0: {{ item.x0 }} </p>
+                <p class="ps-4 text-start fw-bold fst-italic">h: {{ item.h }} </p>
+                <p class="ps-4 text-start fw-bold fst-italic">Orden: {{ item.order }} </p>
+                <p class="ps-4 text-start fw-bold fst-italic">Última vez: {{ item.created_at }} </p>
+
+
+                <div class="d-flex justify-content-center mb-2">
+                    <form action="{% url 'extrapolacion_richardson' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="fx" value="{{ item.fx }}" hidden>
+                        <input type="hidden" name="x0" value="{{ item.x0 }}" hidden>
+                        <input type="hidden" name="h" value="{{ item.h }}" hidden>
+                        <input type="hidden" name="order" value="{{ item.order }}" hidden>
+                        <input class="btn btn-block " type="submit" value="Ver">
+                    </form>
+                    <form action="{% url 'exercise_delete' item.id %}">
+                        <input class="btn btn-block-outline  ms-1" type="submit" value="Eliminar">
+                    </form>
+                  </div>
+              </div>
+          </div>
+
         {% endif %}
     {% endfor %}
+</div>
 {% else %}
     <p>No hay cálculos previos</p>
 {% endif %}
