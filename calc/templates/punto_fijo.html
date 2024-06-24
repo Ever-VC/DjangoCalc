@@ -4,34 +4,36 @@
 
 {% block calcular %}
 <h1 class="btn-calcu text-center">Iteración Simple de Punto Fijo</h1>
-{{ message }}
+{% if message %}
+    <p>{{ message }}</p>
+{% endif %}
 <section  class="">
     <!-- FORM PARA INGRESAR FORMULA -->
     <h6 class="btn-calcu">Ingresa los datos:</h6>
     <form action="{% url 'punto_fijo' %}" class="punto_fijo text-start ps-3 pe-3 pb-1 pt-1 " method="POST">
         {% csrf_token %}
 
-        <div for="fx" class="fw-bold">
+        <div for="fx" class="fw-bold pb-1">
             <label>Función f(x):</label>
             <input class="border border-info-subtle" type="text" name="fx" id="fx" required>
         </div>
         
-        <div for="gx" class="fw-bold">
+        <div for="gx" class="fw-bold pb-1">
             Función g(x):
             <input class="border border-info-subtle" type="text" name="gx" id="gx" required>
         </div>
         
-        <label for="verify_convergence" class="fw-bold text-center">
+        <label for="verify_convergence" class="fw-bold text-center pb-1">
             Verificar convergencia:
             <input class="border border-info-subtle" type="checkbox" name="verify_convergence" id="verify_convergence">
         </label>
     
-        <label for="x0" class="fw-bold text-center">
+        <label for="x0" class="fw-bold text-center pb-1">
             Valor Inicial de X:
             <input class="border border-info-subtle" type="number" name="x0" id="x0" step="any" required>
         </label>
         
-        <label for="error" class="fw-bold text-center">
+        <label for="error" class="fw-bold text-center pb-1">
             Error (%):
             <input class="border border-info-subtle" type="number" name="error" id="error" step="any" required>
         </label>
@@ -51,7 +53,7 @@
         </div>
 
     </form>
-    
+
     <!-- RESULTADO -->
     {% if result %}
     <hr>
@@ -64,9 +66,23 @@
     </div>
     {% endif %}
 
-    {% if image_png %}
-    <div class="text-center p-0 m-0">
-        <img src="data:image/png;base64,{{ image_png }}" alt="Gráfica de la función" style="height: 400px; width: 450px;">
+    {% if user.is_authenticated %}
+        {% if image_png %}
+        <div class="text-center p-0 m-0">
+            <img src="data:image/png;base64,{{ image_png }}" alt="Gráfica de la función" style="height: 400px; width: 450px;">
+        </div>
+        {% endif %}
+    {% endif %}
+
+    <!-- RESULTADO CON ERROR-->
+    {% if error %}
+    <hr>
+    <div class="text-center">
+        <div class="d-flex">
+            <img src="{% static 'imgs/respuesta.png' %}"  style="height: 25px;"/>
+            <h4 class="ps-1 text-start text-info">Respuesta: </h4>
+        </div>
+        <p class="ps-5 text-start fw-bold fst-italic">{{ error }}</p>
     </div>
     {% endif %}
 
@@ -84,18 +100,16 @@
     <!-- ANTES DE ITERAR -->
     <p class="ps-4 text-start">1. Simplificando g(x):  </p>
     <p>$$ {{ gx }} $$</p>
-
         {% if convergence and df %}
             <p class="ps-4 text-start">2. Calculando la derivada de g(x): </p>
             <p>$$ {{ gx_derivada }} $$</p>
             <p class="ps-4 text-start">3. Sustituyendo el valor de \({X_{0}} = {{ x0 }} \) en la función para obtener el valor de convergencia: {{ result_convergence }}. El resultado está entre 0 y 1, significa que sí converge, por lo tanto podemos iniciar con las iteraciones.</p>
         {% elif not convergence and df  %}
-            <p>Puesto que no deseas verificar la convergencia, podemos empezar a iterar para encontrar el valor aproximado de la raíz.</p>
+            <p class="ps-4 text-start">2. Puesto que no deseas verificar la convergencia, podemos empezar a iterar para encontrar el valor aproximado de la raíz.</p>
         {% else %}
-            <p>Ahora calculamos la derivada de g(x), dando el siguiente resultado</p>
+            <p class="ps-4 text-start">2. Ahora calculamos la derivada de g(x), dando el siguiente resultado: </p>
             <p>$$ {{ gx_derivada }} $$</p>
-            <p>Y sustituimos el valor de \({X_{0}} = {{ x0 }} \) en la función para obtener el valor de convergencia, el cual es: {{ result_convergence }}</p>
-            <p> {{ error }}</p>
+            <p class="ps-4 text-start">3. Sustituimos el valor de \({X_{0}} = {{ x0 }} \) en la función para obtener el valor de convergencia, el cual es: {{ result_convergence }}</p>
         {% endif %}
     {% endif %}
     
@@ -116,8 +130,7 @@
                         <hr class="text-info" style="width: 600px;">
                     </div>
                     <div class="d-flex"> 
-                        <p class="text-start ps-5">‣ Calculando el valor de \({X_{i+1}}\), con la siguiente expresión</p>
-                        <p>,donde \({X} = {{ row.X }} \) : </p>
+                        <p class="text-start ps-5">‣ Calculando el valor de \({X_{i+1}}\), con la siguiente expresión, donde \({X} = {{ row.X }} \) : </p>
                     </div>
                     <p>$$ {{ gx }} $$</p>
     
@@ -132,20 +145,32 @@
                         <p class="text-start ps-5">‣ No hay un siguiente valor para calcular.</p>
                     {% endif %}
                 {% else %}
-                    <h2>Por lo tanto el valor de la raíz aproximada es de: {{ row.X }} con un error de {{ row.Error }} % </h2>
+                <div class="row justify-content-center align-items-center">     <!-- Linea -->
+                    <hr class="text-info" style="width: 600px;">
+                </div>
+                <p class="ps-5 text-start fw-bold fst-italic">Por lo tanto, la raíz aproximada de la función f(x) es: {{ result }}</p>
+                <div class="row justify-content-center align-items-center">     <!-- Linea -->
+                    <hr class="text-info" style="width: 600px;">
+                </div>
                 {% endif %}
                 
             {% endfor %}
         {% else %}
-            <table>
+        <!-- ITERACIONES NO INICIO SESIÓN -->
+        <div class="row justify-content-center align-items-center">     <!-- Linea -->
+            <hr class="text-info" style="width: 600px;">
+        </div>
+        <p class="text-start ps-5">‣ Resultados de las iteraciones: </p>
+        <div class="ps-5 pe-5 ms-5 me-5">
+            <table class="table table-bordered border-info">
                 <thead>
-                    <tr>
-                        <th>Iteración</th>
-                        <th>X</th>
-                        <th>Error</th>
+                    <tr class="table-info">
+                        <th class="col">Iteración</th>
+                        <th class="col">X</th>
+                        <th class="col">Error</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                     {% for row in df %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
@@ -155,6 +180,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
             {% if result %}
             <div class="row justify-content-center align-items-center">     <!-- Linea -->
                 <hr class="text-info" style="width: 600px;">
@@ -162,6 +188,12 @@
             <p class="ps-5 text-start fw-bold fst-italic">Por lo tanto, la raíz aproximada de la función f(x) es: {{ result }}</p>
             <div class="row justify-content-center align-items-center">     <!-- Linea -->
                 <hr class="text-info" style="width: 600px;">
+            </div>
+
+
+            <div class="row justify-content-center align-items-center">
+                ¿Quieres ver los pasos completos y la gráfica? Solo debes 
+                <a class="text-decoration-underline" href="{% url 'login' %}"> Iniciar sesión</a>
             </div>
             {% endif %}
         {% endif %}

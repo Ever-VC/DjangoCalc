@@ -158,20 +158,22 @@ def punto_fijo(request):
             
             df[-1]['next_X'] = None # La última iteración no tiene siguiente valor
 
-            # Guarda el historial de cálculos en la base de datos
-            history = Calculator_History(
-                method='punto_fijo',
-                fx=fx,
-                gx=gx,
-                verify_convergence=verify_convergence,
-                x0=x0,
-                error=error_objetivo,
-                max_iter=max_iter,
-                decimals=decimals,
-                user=request.user
-            )
+            #Verifica si el usuario esta autentificado
+            if request.user.is_authenticated:
+                # Guarda el historial de cálculos en la base de datos
+                history = Calculator_History(
+                    method='punto_fijo',
+                    fx=fx,
+                    gx=gx,
+                    verify_convergence=verify_convergence,
+                    x0=x0,
+                    error=error_objetivo,
+                    max_iter=max_iter,
+                    decimals=decimals,
+                    user=request.user
+                )
+                history.save() # Guarda el historial de cálculos en la base de datos
 
-            history.save() # Guarda el historial de cálculos en la base de datos
 
             # Retorna el template con los resultados
             return render(request, 'punto_fijo.html', {
@@ -201,6 +203,7 @@ def extrapolacion_richardson(request):
                 'error': 'Todos los campos son obligatorios.'
             })
         
+        fx = fx.replace('^', '**')
         # Elimina las , de los números decimales
         h = h.replace(',', '.')
         x0 = x0.replace(',', '.')
@@ -221,17 +224,18 @@ def extrapolacion_richardson(request):
             
             graph_base64 = base64.b64encode(graph.getvalue()).decode('utf-8')
 
-            # Guarda el historial de cálculos en la base de datos
-            history = Calculator_History(
-                method='extrapolacion_richardson',
-                fx=fx,
-                x0=x0,
-                h=h,
-                order=order,
-                user=request.user
-            )
-
-            history.save() # Guarda el historial de cálculos en la base de datos
+            #Verifica si el usuario esta autentificado
+            if request.user.is_authenticated:
+                # Guarda el historial de cálculos en la base de datos
+                history = Calculator_History(
+                    method='extrapolacion_richardson',
+                    fx=fx,
+                    x0=x0,
+                    h=h,
+                    order=order,
+                    user=request.user
+                )
+                history.save() # Guarda el historial de cálculos en la base de datos
 
             context = {
                 'result': result,
