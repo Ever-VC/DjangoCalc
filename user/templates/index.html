@@ -54,7 +54,8 @@
               <td @click="change('+')" :class="[active === '+' ? 'active' : '']" @touchstart="msDown('+')" @touchend="msUp('+')" class="fw-bold signo">+</td>
             </tr>
             <tr>
-              <td colspan="2" class="comfirm fw-bold" @click="comfirm"><input class="btn-calc-basic" type="submit" value="Ir"></td>
+              {% csrf_token %}
+              <td colspan="2" class="comfirm fw-bold"><input class="btn-calc-basic" type="submit" value="Ir" href="{% url 'solve' %}"></td>
               <td colspan="2" class="del" @click="del">
                 <img src="{% static 'imgs/borrar.png' %}"/>
               </td>
