@@ -127,3 +127,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'index'
+
+import os
+
+# Configuración de archivos estáticos
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Asegúrate de agregar media a tus URL patterns
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    # tus patrones de URL
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
