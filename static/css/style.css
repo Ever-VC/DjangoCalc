@@ -25,7 +25,7 @@ body {
 }
 
 .cover-container {
-  max-width: 70em;
+  max-width: 75em;
 }
 
 
@@ -232,7 +232,9 @@ a:hover {
 
 .largo
 {
-  min-height: 32em;;
+  margin-top: 15px;
+  margin-bottom: auto;
+  min-height: 30em;;
 }
 
 .btn-calcu{

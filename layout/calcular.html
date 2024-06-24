@@ -9,19 +9,29 @@
       <!--Primera Carta-->
 
         <div class="row">
-          <div class="col-lg-3 d-flex align-items-stretch">
+          <div class="col-lg-3">
             <div class="card p-3 pt-4">
-                <a href="#"  class="btn-calcu mb-3 d-flex">
-                  <img src="{% static 'imgs/calcu2.png' %}"  style="height: 25px;"/>
-                  <input  class="bg-white btn-calcu ps-2" type="submit" value="Calculadora">
+              <p class="btn-calcu d-flex">
+                <img src="{% static 'imgs/opciones.png' %}"  style="height: 22px;"/>
+                <input  class="bg-white btn-calcu ps-1" type="submit" value="Opciones">
+              </p>
+                <a href="#"  class="btn-calcu mb-3 ps-3 d-flex">
+                  <img src="{% static 'imgs/calcu2.png' %}"  style="height: 22px;"/>
+                  <input  class="bg-white btn-calcu ps-1" type="submit" value="Calculadora">
                 </a>
-                <a href="{% url 'punto_fijo' %}"  class="btn btn-block mb-3"><input  class="bg-block" type="submit" value="Método del punto fijo"></a>
-                <a href="{% url 'extrapolacion_richardson' %}"  class="btn btn-block mb-3"><input  class="bg-block" type="submit" value="Extrapolación de Richardson"></a>
+                <a href="{% url 'punto_fijo' %}"  class="btn-calcu ps-3 mb-3 d-flex">
+                  <img src="{% static 'imgs/raiz.png' %}"  style="height: 22px;"/>
+                  <input  class="bg-white btn-calcu ps-1" type="submit" value="Método del punto fijo">
+                </a>
+                <a href="{% url 'extrapolacion_richardson' %}"  class="btn-calcu ps-3 mb-3 d-flex">
+                  <img src="{% static 'imgs/extrapolacion.png' %}"  style="height: 22px;"/>
+                  <input  class="bg-white btn-calcu ps-1" type="submit" value="Extrapolación de Richardson">
+                </a>
             </div>
           </div>
       
           <!--Segunda Carta-->
-          <div class="col-lg-9  d-flex align-items-stretch">
+          <div class="col-lg-9">
             <div class="card">
               <div class="card-body">
                 {% block calcular %}{% endblock %}

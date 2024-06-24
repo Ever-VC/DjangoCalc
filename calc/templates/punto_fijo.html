@@ -1,121 +1,137 @@
 {% extends 'calcular.html' %}
-
+{% load static %}
 {% block title %}Punto Fijo{% endblock %}
 
 {% block calcular %}
-<h1>Iteración Simple de Punto Fijo</h1>
+<h1 class="btn-calcu text-center">Iteración Simple de Punto Fijo</h1>
 {{ message }}
-<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam soluta possimus aliquid nemo sint reiciendis exercitationem beatae corporis sit, repellat quaerat ab eos amet modi, perferendis alias nobis sed sequi. Amet incidunt corporis possimus expedita sed at ab, neque eos ullam earum culpa! Nam odio ea voluptates enim accusamus incidunt pariatur nobis qui, est voluptate aut, distinctio ipsam amet porro totam libero voluptatibus autem beatae doloremque vel fuga asperiores. Et vel maxime pariatur aut, dolores provident eum ipsam error quisquam fugiat? Dolorem provident delectus libero, illum cupiditate iure reiciendis laudantium veniam illo sapiente numquam quam possimus, eaque minima natus culpa!</p>
-<section>
-    <form action="{% url 'punto_fijo' %}" class="punto_fijo" method="POST">
+<section  class="">
+    <!-- FORM PARA INGRESAR FORMULA -->
+    <h6 class="btn-calcu">Ingresa los datos:</h6>
+    <form action="{% url 'punto_fijo' %}" class="punto_fijo text-start ps-3 pe-3 pb-1 pt-1 " method="POST">
         {% csrf_token %}
-        <label for="fx">
-            Función f(x):
-            <input type="text" name="fx" id="fx" required>
-        </label>
+
+        <div for="fx" class="fw-bold">
+            <label>Función f(x):</label>
+            <input class="border border-info-subtle" type="text" name="fx" id="fx" required>
+        </div>
         
-        <label for="gx">
+        <div for="gx" class="fw-bold">
             Función g(x):
-            <input type="text" name="gx" id="gx" required>
-        </label>
+            <input class="border border-info-subtle" type="text" name="gx" id="gx" required>
+        </div>
         
-        <label for="verify_convergence">
+        <label for="verify_convergence" class="fw-bold text-center">
             Verificar convergencia:
-            <input type="checkbox" name="verify_convergence" id="verify_convergence">
+            <input class="border border-info-subtle" type="checkbox" name="verify_convergence" id="verify_convergence">
         </label>
     
-        <label for="x0">
+        <label for="x0" class="fw-bold text-center">
             Valor Inicial de X:
-            <input type="number" name="x0" id="x0" step="any" required>
+            <input class="border border-info-subtle" type="number" name="x0" id="x0" step="any" required>
         </label>
         
-        <label for="error">
+        <label for="error" class="fw-bold text-center">
             Error (%):
-            <input type="number" name="error" id="error" step="any" required>
+            <input class="border border-info-subtle" type="number" name="error" id="error" step="any" required>
         </label>
     
-        <label for="max_iter">
+        <div for="max_iter" class="fw-bold">
             Máximo de iteraciones:
-            <input type="number" name="max_iter" id="max_iter" required>
-        </label>
+            <input class="border border-info-subtle"  type="number" name="max_iter" id="max_iter" required>
+        </div>
         
-        <label for="decimals">
+        <div for="decimals" class="fw-bold">
             Decimales:
-            <input type="number" name="decimals" id="decimals" required>
-        </label>
-        <input type="submit" value="Calcular">
+            <input  class="border border-info-subtle" type="number" name="decimals" id="decimals" required>
+        </div>
+
+        <div class="row justify-content-center align-items-center">
+            <input class="btn btn-block mt-3 " type="submit" value="Calcular" style="max-width: 300px;">
+        </div>
+
     </form>
     
+    <!-- RESULTADO -->
     {% if result %}
-    <br>
-    <br>
     <hr>
-    <br>
-    <p>La raíz aproximada de la función f(x) es: {{ result }}</p>
+    <div class="text-center">
+        <div class="d-flex">
+            <img src="{% static 'imgs/respuesta.png' %}"  style="height: 25px;"/>
+            <h4 class="ps-1 text-start text-info">Respuesta: </h4>
+        </div>
+        <p class="ps-5 text-start fw-bold fst-italic">La raíz aproximada de la función f(x) es: {{ result }}</p>
+    </div>
     {% endif %}
-    <br>
-    
+
     {% if image_png %}
-    <img src="data:image/png;base64,{{ image_png }}" alt="Gráfica de la función">
+    <div class="text-center p-0 m-0">
+        <img src="data:image/png;base64,{{ image_png }}" alt="Gráfica de la función" style="height: 400px; width: 450px;">
+    </div>
     {% endif %}
+
     
     {% if gx %}
-        <p>Lo primero que haremos es simplificar el g(x), quedando de la siguiente manera: $$ {{ gx }} $$ </p>
+    <!-- PASOS -->
+    <hr>
+    <div class="text-center">
+        <div class="d-flex">
+            <img src="{% static 'imgs/pasos.png' %}"  style="height: 25px;"/>
+            <h4 class="text-start text-info">Pasos: </h4>
+        </div>
+    </div>
+
+    <!-- ANTES DE ITERAR -->
+    <p class="ps-4 text-start">1. Simplificando g(x):  </p>
+    <p>$$ {{ gx }} $$</p>
+
         {% if convergence and df %}
-            <br>
-            <br>
-            <p>Ahora calculamos la derivada de g(x), dando el siguiente resultado</p>
-            <br>
+            <p class="ps-4 text-start">2. Calculando la derivada de g(x): </p>
             <p>$$ {{ gx_derivada }} $$</p>
-            <br>
-            <p>Y sustituimos el valor de \({X_{0}} = {{ x0 }} \) en la función para obtener el valor de convergencia, el cual es: {{ result_convergence }}</p>
-            <p>Dado que el resultado está entre 0 y 1, significa que sí converge, por lo tanto podemos iniciar con las iteraciones.</p>
+            <p class="ps-4 text-start">3. Sustituyendo el valor de \({X_{0}} = {{ x0 }} \) en la función para obtener el valor de convergencia: {{ result_convergence }}. El resultado está entre 0 y 1, significa que sí converge, por lo tanto podemos iniciar con las iteraciones.</p>
         {% elif not convergence and df  %}
             <p>Puesto que no deseas verificar la convergencia, podemos empezar a iterar para encontrar el valor aproximado de la raíz.</p>
         {% else %}
-            <br>
-            <br>
             <p>Ahora calculamos la derivada de g(x), dando el siguiente resultado</p>
-            <br>
             <p>$$ {{ gx_derivada }} $$</p>
-            <br>
             <p>Y sustituimos el valor de \({X_{0}} = {{ x0 }} \) en la función para obtener el valor de convergencia, el cual es: {{ result_convergence }}</p>
             <p> {{ error }}</p>
         {% endif %}
-        <br><br><br>
     {% endif %}
     
+    <!-- ITERACIONES -->
     {% if df %}
         {% if user.is_authenticated %}
             {% for row in df %}
                 {% if not forloop.last %}
-                    <hr>
-                    <h3>Iteración #{{ forloop.counter }}, donde \({i} = {{ forloop.counter0 }} \)   y \({X_{i}} = {X_{ {{ forloop.counter0 }} }} = {{ row.X }} \)</h3>
-                    <hr>
-                    <h4>Calcula el valor de \({X_{i+1}}\), con la siguiente expresión, donde \({X} = {{ row.X }} \).</h4>
-                    $$ {{ gx }} $$
+                    <div class="row justify-content-center align-items-center">     <!-- Linea -->
+                        <hr class="text-info" style="width: 600px;">
+                    </div>
+                    <div class="d-flex justify-content-around">
+                        <h5 class="text-start fw-bold fst-italic">Iteración #{{ forloop.counter }}</h5>
+                        <p class="text-start">\({i} = {{ forloop.counter0 }} \)</p>
+                        <p class="text-start">\({X_{i}} = {X_{ {{ forloop.counter0 }} }} = {{ row.X }} \)</p>
+                    </div>
+                    <div class="row justify-content-center align-items-center">     <!-- Linea -->
+                        <hr class="text-info" style="width: 600px;">
+                    </div>
+                    <div class="d-flex"> 
+                        <p class="text-start ps-5">‣ Calculando el valor de \({X_{i+1}}\), con la siguiente expresión</p>
+                        <p>,donde \({X} = {{ row.X }} \) : </p>
+                    </div>
+                    <p>$$ {{ gx }} $$</p>
     
                     {% if not forloop.last %}
-                        <p>Dando como resultado para \({X_{i+1}} = {X_{ {{ forloop.counter0 }} +1}} \) el valor de: {{ row.Next_X }}.</p>
-                        <br>
-                        <h4>Ahora calculamos el error relativo porcentual con la siguiente expresión, sustituyendo los valores correspondientes:</h4>
-                        <br>
-                        \( \varepsilon_a = \left| \frac{X_{i+1} - X_i}{X_{i+1}} \right| 100\% \)
-                        <br>
-                        <br>
-                        <p>Tomando en cuenta que: \({X_{i+1}}\) = {{ row.Next_X }} y \({X_{i}}\) = {{ row.X }}. Sustituyendo queda de la siguiente manera:</p>
-                        <br>
-                        \( \varepsilon_a = \left| \frac{ {{ row.Next_X }} - {{ row.X }} }{ {{ row.Next_X }} } \right| 100\% \)
-                        <br>
-                        <br>
-                        <p>Dando como resultado para \(\varepsilon_a = {{ row.Error }} \)%</p>
+                        <p class="text-start ps-5">‣ Dando como resultado para \({X_{i+1}} = {X_{ {{ forloop.counter0 }} +1}} \) el valor de: {{ row.Next_X }}.</p>
+                        <p class="text-start ps-5">‣ Ahora calculamos el error relativo porcentual con la siguiente expresión, sustituyendo los valores correspondientes:</h4>
+                        <p>\( \varepsilon_a = \left| \frac{X_{i+1} - X_i}{X_{i+1}} \right| 100\% \)</p>
+                        <p class="text-start ps-5">‣ Tomando en cuenta que: \({X_{i+1}}\) = {{ row.Next_X }} y \({X_{i}}\) = {{ row.X }}. Sustituyendo queda de la siguiente manera:</p>
+                        <p>\( \varepsilon_a = \left| \frac{ {{ row.Next_X }} - {{ row.X }} }{ {{ row.Next_X }} } \right| 100\% \)</p>
+                        <p class="text-start ps-5">‣ Dando como resultado para \(\varepsilon_a = {{ row.Error }} \)%</p>
                     {% else %}
-                        <p>No hay un siguiente valor para calcular.</p>
+                        <p class="text-start ps-5">‣ No hay un siguiente valor para calcular.</p>
                     {% endif %}
-                    <br>
-                    <br>
                 {% else %}
-                    <hr>
                     <h2>Por lo tanto el valor de la raíz aproximada es de: {{ row.X }} con un error de {{ row.Error }} % </h2>
                 {% endif %}
                 
@@ -140,10 +156,17 @@
                 </tbody>
             </table>
             {% if result %}
-                <p>Por lo tanto, la raíz aproximada de la función f(x) es: {{ result }}</p>
+            <div class="row justify-content-center align-items-center">     <!-- Linea -->
+                <hr class="text-info" style="width: 600px;">
+            </div>
+            <p class="ps-5 text-start fw-bold fst-italic">Por lo tanto, la raíz aproximada de la función f(x) es: {{ result }}</p>
+            <div class="row justify-content-center align-items-center">     <!-- Linea -->
+                <hr class="text-info" style="width: 600px;">
+            </div>
             {% endif %}
         {% endif %}
-        
     {% endif %}
+
+
 </section>
 {% endblock %}
