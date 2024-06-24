@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
+from .models import Profile
 
 # Create your views here.
 def index(request):
@@ -16,17 +17,21 @@ def calcular(request):
 
 def signup(request):
     if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password1')
         confirm_password = request.POST.get('password2')
-        
+        profile_img = request.FILES.get('profile_img')
         if password == confirm_password:
             try:
-                user = User.objects.create_user(username, email, password)
+                user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email, password=password)
                 user.save()
+                profile = Profile.objects.create(user=user, profile_img=profile_img)
+                profile.save()
                 login(request, user)
-                return redirect('index', {'message': 'Usuario creado con éxito.'})
+                return redirect('index')
             except:
                 return render(request, 'signup.html', {'error': 'El usuario ya existe.'})
         else:
@@ -61,23 +66,40 @@ def signout(request):
 
 @login_required
 def profile(request):
+    profile = Profile.objects.get(user=request.user)
     user = request.user
-    return render(request, 'profile.html', {'user': user})
+    return render(request, 'profile.html', {'user': user, 'profile_img': profile.profile_img})
 
 @login_required
 def edit_profile(request):
     if request.method == 'POST':
         # Almacenar los datos del formulario
-        username = request.POST.get('username')
-        old_password = request.POST.get('password')
+        user = request.user # Obtener el usuario actual
+        first_name = request.POST.get('first_name', user.first_name)
+        last_name = request.POST.get('last_name', user.last_name)
+        username = request.POST.get('username', user.username)
+        old_password = request.POST.get('password', user.password)
         password = request.POST.get('password1')
         confirm_password = request.POST.get('password2')
-        user = request.user # Obtener el usuario actual
+        profile_img = request.FILES.get('profile_img', None)
         if user.check_password(old_password): # Verificar la contraseña actual
+            if password == '': # Verificar si se ingresó una nueva contraseña
+                password = old_password
+                confirm_password = old_password
+
             if password == confirm_password: # Verificar que las nuevas contraseñas coincidan
+                user.first_name = first_name
+                user.last_name = last_name
                 user.username = username # Cambiar el nombre de usuario
                 user.set_password(password) # Cambiar la contraseña
                 user.save() # Guardar los cambios
+                
+                # Actualizar la imagen de perfil si se subió una nueva
+                if profile_img:
+                    profile = Profile.objects.get(user=user)
+                    profile.profile_img = profile_img
+                    profile.save()
+
                 # Actualizar la sesión
                 update_session_auth_hash(request, user)
 
@@ -85,4 +107,5 @@ def edit_profile(request):
                 return redirect('profile')
             return render(request, 'edit_profile.html', {'error': 'Las contraseñas no coinciden.'})
         return render(request, 'edit_profile.html', {'error': 'Contraseña incorrecta.'})
-    return render(request, 'edit_profile.html')
+    profile = Profile.objects.get(user=request.user)
+    return render(request, 'edit_profile.html', {'user': request.user, 'profile_img': profile.profile_img})
